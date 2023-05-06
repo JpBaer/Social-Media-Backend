@@ -72,8 +72,8 @@ module.exports = {
             }
 
             const user = await User.findOneAndUpdate(
-                {thoughts: req.body.thoughtId},
-                {$addToSet: {thoughts: thought._id}},
+                {thoughts: req.params.thoughtId},
+                {$addToSet: {thoughts: req.params.thoughtId}},
                 {new: true}
             );
 
@@ -88,7 +88,7 @@ module.exports = {
         try{
             const thought = await Thought.findOneAndUpdate(
                 {_id: req.params.thoughtId},
-                {$addToSet: {reactions: req.body}},
+                {$push: {reactions: req.body}},
                 {runValidators: true, new: true}
             );
 
@@ -105,13 +105,14 @@ module.exports = {
         try{
             const thought = await Thought.findOneAndUpdate(
                 {_id: req.params.thoughtId},
-                {$pull: {reactions: {reactionId: req.params.tagId}}},
+                {$pull: {reactions: {reactionId: req.params.reactionId}}},
                 {runValidators: true, new: true}
                 );
 
                 if(!thought){
                     return res.status(404).json({message: 'No application with this id!'});
                 }
+                res.json(thought)
         }catch(err){
             res.status(500).json(err);
       }

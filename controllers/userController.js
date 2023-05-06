@@ -55,6 +55,7 @@ module.exports = {
             if(!user) {
                 return res.status(404).json({message: 'No user with that Id'})
             }
+            res.json(user)
         } catch (err) {
             res.status(500).json(err)
         }
@@ -64,7 +65,7 @@ module.exports = {
         try{
             const user = await User.findOneAndUpdate(
                 {_id: req.params.userId},
-                {$addToSet: {friends: req.body}},
+                {$addToSet: {friends: req.params.friendId}},
                 {runValidators: true, new: true}
             );
 
@@ -82,7 +83,7 @@ module.exports = {
             const user = await User.findOneAndUpdate(
                 {_id: req.params.userId},
                 //friendID?
-                {$pull: {friends:{_id: req.params.friendId}}},
+                {$pull: {friends: req.params.friendId}},
                 {runValidators: true, new: true}
             );
 
